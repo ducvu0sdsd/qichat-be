@@ -1,7 +1,8 @@
 'use strict'
 
 const authService = require("../services/auth.service")
-const userService = require("../services/user.service")
+const userService = require("../services/user.service");
+const responseWithTokens = require("../utils/response");
 
 class UserController {
 
@@ -21,6 +22,50 @@ class UserController {
         }
     }
 
+    findByName = async (req, res) => {
+        try {
+            const { name } = req.params;
+            userService.findByName(name)
+                .then(users => {
+                    return responseWithTokens(req, res, users, 200)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    findByEmail = async (req, res) => {
+        try {
+            const { email } = req.params;
+            userService.findByEmail(email)
+                .then(users => {
+                    return responseWithTokens(req, res, users, 200)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    findByPhone = async (req, res) => {
+        try {
+            const { phone } = req.params;
+            userService.findByPhone(phone)
+                .then(users => {
+                    return responseWithTokens(req, res, users, 200)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = new UserController()

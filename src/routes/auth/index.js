@@ -11,6 +11,6 @@ router.post('/sign-up-with-google', AccessController.signUpWithGoogle)
 router.post('/sign-in', AccessController.signIn)
 router.post('/sign-in-with-google', AccessController.signInWithGoogle)
 router.post('/generate-tokens', AccessController.generateToken)
-router.post('/check-tokens', middleware.checkToken, AccessController.checkToken)
+router.get('/get-user-by-tokens', middleware.checkToken, AccessController.getUserByID)
 
 module.exports = router  

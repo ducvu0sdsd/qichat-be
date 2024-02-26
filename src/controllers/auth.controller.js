@@ -1,6 +1,7 @@
 'use strict'
 
 const authService = require("../services/auth.service");
+const userService = require("../services/user.service");
 const responseWithTokens = require("../utils/response");
 
 class AccessController {
@@ -65,8 +66,9 @@ class AccessController {
         }
     }
 
-    checkToken = async (req, res) => {
-        return responseWithTokens(req, res, {}, 200)
+    getUserByID = async (req, res) => {
+        const user = await userService.findByID(req.headers.user_id)
+        return responseWithTokens(req, res, user, 200)
     }
 }
 

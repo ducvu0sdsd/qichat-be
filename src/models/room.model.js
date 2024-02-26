@@ -8,14 +8,23 @@ var roomSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
             },
-            name: String
+            fullName: String,
+            avatar: String
         }
     ],
     name: {
         type: String,
         required: true,
-        index: true,
     },
+    type: {
+        type: String,
+        enum: ['Single', 'Group'],
+        default: 'Single'
+    },
+    image: {
+        type: String,
+        default: ''
+    }
 }, { timestamps: true });
 
 //Export the model

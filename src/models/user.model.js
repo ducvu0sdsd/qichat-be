@@ -32,7 +32,12 @@ var userSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User', // để chỉ đến mô hình User nếu bạn đang thực hiện quan hệ với chính bản thân mô hình User
             },
-            name: String,
+            fullName: String,
+            avatar: String,
+            block: {
+                type: Boolean,
+                default: false
+            }
         }
     ],
     statusSignUp: {
@@ -43,7 +48,21 @@ var userSchema = new mongoose.Schema({
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female'],
+        require: true
+    },
+    restrictions: [
+        {
+            _id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Room', // để chỉ đến mô hình User nếu bạn đang thực hiện quan hệ với chính bản thân mô hình User
+            },
+            name: String,
+        }
+    ]
 }, { timestamps: true });
 
 //Export the model
