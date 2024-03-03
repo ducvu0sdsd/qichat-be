@@ -1,19 +1,26 @@
 'use strict'
 
 const userModel = require("../models/user.model")
+const shuffleArray = require("../utils/others")
 
 class UserService {
 
+    findAll = async () => {
+        return await userModel.find()
+    }
+
     update = async (id, body) => {
         const user = await userModel.findByIdAndUpdate(id, body, { new: true })
-        user.password = ''
+        if (user)
+            user.password = ''
         return user
     }
 
     findByID = async (id) => {
         try {
             const user = await userModel.findById(id)
-            user.password = ''
+            if (user)
+                user.password = ''
             return user
         } catch (error) {
 
@@ -41,6 +48,14 @@ class UserService {
         return result
     }
 
+    getFriendsOperating = async (id) => {
+        const users = await userModel.find()
+        const ownUser = await userModel.findById(id)
+        const friends = users.filter(user => {
+            return ownUser.friends.map(item => item._id.toString()).includes(user._id.toString())
+        })
+        return shuffleArray(friends.filter(friend => friend.operating.status === true))
+    }
 }
 
 module.exports = new UserService()

@@ -15,6 +15,18 @@ class RoomController {
             })
     }
 
+    getGroupsByUser = async (req, res) => {
+        const { id } = req.params
+        roomService.getGroupsByUser(id)
+            .then(rooms => {
+                return responseWithTokens(req, res, rooms, 200)
+            })
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error, 500)
+            })
+    }
+
     getRoomsByUser = async (req, res) => {
         const { id } = req.params
         roomService.getRoomsByUser(id)

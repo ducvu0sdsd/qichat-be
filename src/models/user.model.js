@@ -1,6 +1,10 @@
 // !mdbgum
 
 const mongoose = require('mongoose'); // Erase if already required
+const moment = require('moment-timezone');
+
+// Thiết lập múi giờ mặc định là 'Asia/Ho_Chi_Minh'
+moment.tz.setDefault('Asia/Ho_Chi_Minh');
 
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema({
@@ -62,7 +66,16 @@ var userSchema = new mongoose.Schema({
             },
             name: String,
         }
-    ]
+    ],
+    operating: {
+        status: {
+            type: Boolean,
+            default: false
+        },
+        time: {
+            type: Date,
+        }
+    }
 }, { timestamps: true });
 
 //Export the model

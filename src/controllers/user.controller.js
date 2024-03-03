@@ -66,6 +66,13 @@ class UserController {
             console.log(error)
         }
     }
+
+    getFriendsOperating = async (req, res) => {
+        const { id } = req.params
+        userService.getFriendsOperating(id)
+            .then(users => responseWithTokens(req, res, users, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
 }
 
 module.exports = new UserController()

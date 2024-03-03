@@ -46,6 +46,11 @@ class RequestService {
         }
         const userFull_1 = await userService.findByID(user1._id)
         const userFull_2 = await userService.findByID(user2._id)
+
+        if (userFull_1.friends.map(user => user._id).includes(userFull_2._id)) {
+            throw new Error('2 Users already make friend each other')
+        }
+
         userFull_1.friends.push(user2)
         userFull_2.friends.push(user1)
         await userService.update(userFull_1._id, userFull_1)

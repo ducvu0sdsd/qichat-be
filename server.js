@@ -7,6 +7,11 @@ const app = express()
 const dotenv = require('dotenv')
 const http = require('http')
 const cors = require('cors');
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Ho_Chi_Minh');
+const messageService = require('./src/services/message.service')
+const userService = require('./src/services/user.service')
+const roomService = require('./src/services/room.service')
 const port = 8080
 
 // config
@@ -42,8 +47,23 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-    socket.on('send_message', (data) => {
-        socket.broadcast.emit('receive_message', data)
+    socket.on('send_emoji', async (data) => {
+        const { room_id } = data
+        await messageService.updateMessage(data)
+        io.emit(room_id, await messageService.getMessagesByRoom(room_id))
+    })
+    socket.on('send_message', async (data) => {
+        const { room_id, reply, information, typeMessage, user_id } = data
+        await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
+        await roomService.updateLastMessage(room_id, { information, time: new Date() })
+        io.emit(room_id, await messageService.getMessagesByRoom(room_id))
+        io.emit('update-operation')
+    })
+    socket.on('update-room', () => {
+        io.emit('update-operation')
+    })
+    socket.on('close_operating', async (user) => {
+        await userService.update(user._id, user)
     })
 })
 
