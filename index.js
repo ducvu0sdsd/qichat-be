@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const { Server } = require('socket.io')
 const app = express()
 const dotenv = require('dotenv')
-const http = require('http')
+const https = require('https')
 const cors = require('cors');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
@@ -18,6 +18,7 @@ const port = 8080
 dotenv.config();
 
 const corsOptions = {
+    // origin: 'http://localhost:3000',
     origin: 'https://www.qichat.online',
     allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'user_id', 'admin']
 };
@@ -36,7 +37,7 @@ require('./src/dbs/init.mongodb')
 app.use('', require('./src/routes/index'))
 
 // socket realtime
-const server = http.createServer(app)
+const server = https.createServer(app)
 const io = new Server(server, {
     cors: {
         cors: {
