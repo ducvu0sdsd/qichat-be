@@ -20,7 +20,7 @@ dotenv.config();
 const corsOptions = {
     // origin: 'http://localhost:3000',
     origin: 'https://www.qichat.online',
-    allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'user_id', 'admin']
+    allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'userid', 'admin']
 };
 
 // init middleware

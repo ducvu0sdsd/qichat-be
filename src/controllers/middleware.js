@@ -8,7 +8,7 @@ class Middleware {
     checkToken = async (req, res, next) => {
         const accessToken = req.headers.accesstoken
         const refreshToken = req.headers.refreshtoken
-        const user_id = req.headers.user_id
+        const user_id = req.headers.userid
         const admin = req.headers.admin
         console.log(req.headers)
         if (!user_id || !admin || !refreshToken) {
