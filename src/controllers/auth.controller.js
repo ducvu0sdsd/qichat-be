@@ -67,7 +67,7 @@ class AccessController {
     }
 
     getUserByID = async (req, res) => {
-        const user = await userService.findByID(req.headers.user_id)
+        const user = await userService.findByID(req.headers.userid)
         return responseWithTokens(req, res, user, 200)
     }
 }
