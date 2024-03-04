@@ -10,7 +10,7 @@ class Middleware {
         const refreshToken = req.headers.refreshtoken
         const user_id = req.headers.user_id
         const admin = req.headers.admin
-        console.log(user_id, admin, refreshToken)
+        console.log(req.headers)
         if (!user_id || !admin || !refreshToken) {
             return res.status(500).send('Not Found Information');
         }
