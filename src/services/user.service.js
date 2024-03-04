@@ -10,10 +10,12 @@ class UserService {
     }
 
     update = async (id, body) => {
-        const user = await userModel.findByIdAndUpdate(id, body, { new: true })
-        if (user)
-            user.password = ''
-        return user
+        const user = await userModel.findById(id)
+        body.password = user.password
+        const userUpdated = await userModel.findByIdAndUpdate(id, body, { new: true })
+        if (userUpdated)
+            userUpdated.password = ''
+        return userUpdated
     }
 
     findByID = async (id) => {
