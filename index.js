@@ -13,13 +13,14 @@ const messageService = require('./src/services/message.service')
 const userService = require('./src/services/user.service')
 const roomService = require('./src/services/room.service')
 const port = 8080
+const baseURL = 'https://www.qichat.online'
+// const baseURL = 'http://localhost:3000'
 
 // config
 dotenv.config();
 
 const corsOptions = {
-    // origin: 'http://localhost:3000',
-    origin: 'https://www.qichat.online',
+    origin: baseURL,
     allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'userid', 'admin']
 };
 
@@ -41,7 +42,7 @@ const server = https.createServer(app)
 const io = new Server(server, {
     cors: {
         cors: {
-            origin: 'https://www.qichat.online',
+            origin: baseURL,
             methods: ["GET", "POST", "PUT", "DELETE"]
         },
     }
@@ -58,13 +59,15 @@ io.on('connection', (socket) => {
         await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
         await roomService.updateLastMessage(room_id, { information, time: new Date() })
         io.emit(room_id, await messageService.getMessagesByRoom(room_id))
-        io.emit('update-operation')
+        setTimeout(() => {
+            io.emit('update-operation')
+        }, 1000);
     })
     socket.on('update-room', () => {
         io.emit('update-operation')
     })
     socket.on('close_operating', async (user) => {
-        await userService.update(user._id, user)
+        await userService.updateOperating(user._id, user.operating)
     })
 })
 

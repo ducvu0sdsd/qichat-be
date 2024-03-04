@@ -18,6 +18,16 @@ class UserService {
         return userUpdated
     }
 
+    updateOperating = async (id, operating) => {
+        try {
+            let user = await userModel.findById(id)
+            user.operating = operating
+            await userModel.findByIdAndUpdate(id, user, { new: true })
+        } catch (error) {
+
+        }
+    }
+
     findByID = async (id) => {
         try {
             const user = await userModel.findById(id)
