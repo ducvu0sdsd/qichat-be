@@ -48,6 +48,17 @@ class RequestController {
                 return responseWithTokens(req, res, { error: error.message }, 500)
             })
     }
+
+    getRequestBy2User = async (req, res) => {
+        const { user_id1, user_id2 } = req.body
+        requestService.getRequestBy2User(user_id1, user_id2)
+            .then((result) => {
+                return responseWithTokens(req, res, result, 200)
+            })
+            .catch(error => {
+                return responseWithTokens(req, res, { error: error.message }, 500)
+            })
+    }
 }
 
 module.exports = new RequestController()

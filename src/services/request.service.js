@@ -25,6 +25,16 @@ class RequestService {
         return await friendRequestModel.find({ "toUser._id": user_id })
     }
 
+    getRequestBy2User = async (user_id1, user_id2) => {
+        const requestExists = await friendRequestModel.findOne({ "fromUser._id": user_id1, "toUser._id": user_id2 })
+        if (requestExists)
+            return requestExists
+        const requestExists1 = await friendRequestModel.findOne({ "fromUser._id": user_id2, "toUser._id": user_id1 })
+        if (requestExists1)
+            return requestExists1
+        return undefined
+    }
+
     refuseRequest = async (id) => {
         const request = await friendRequestModel.findById(id)
         await friendRequestModel.findByIdAndDelete(id)
@@ -61,6 +71,13 @@ class RequestService {
 
         // Find All Request For Current User
         const requests = await friendRequestModel.find({ "toUser._id": newUser._id })
+
+        const rooms = await roomService.getRoomsByUser(user1._id)
+        rooms.forEach(room => {
+            if (room.users.map(item => item._id).includes(user2._id)) {
+                return { user: newUser, requests }
+            }
+        })
 
         // Create Room For 2 User
         await roomService.createRoom([user1, user2], 'none', 'Single')
