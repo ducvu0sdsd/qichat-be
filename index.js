@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const { Server } = require('socket.io')
 const app = express()
 const dotenv = require('dotenv')
-const https = require('https')
+const https = require('http')
 const cors = require('cors');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
