@@ -18,7 +18,7 @@ const port = 8080
 dotenv.config();
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://www.qichat.online',
     allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'user_id', 'admin']
 };
 
@@ -40,7 +40,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
         cors: {
-            origin: 'http://localhost:3000',
+            origin: 'https://www.qichat.online',
             methods: ["GET", "POST", "PUT", "DELETE"]
         },
     }
