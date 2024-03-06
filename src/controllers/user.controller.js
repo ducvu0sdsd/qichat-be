@@ -18,7 +18,7 @@ class UserController {
                     return res.status(500).json({ error: `Update failed` });
                 });
         } catch (error) {
-            console.log(error)
+            return responseWithTokens(req, res, error, 500)
         }
     }
 
@@ -30,10 +30,25 @@ class UserController {
                     return responseWithTokens(req, res, users, 200)
                 })
                 .catch(error => {
-                    console.log(error)
+                    return responseWithTokens(req, res, error, 500)
                 })
         } catch (error) {
-            console.log(error)
+            return responseWithTokens(req, res, error, 500)
+        }
+    }
+
+    findByID = async (req, res) => {
+        try {
+            const { id } = req.params;
+            userService.findByID(id)
+                .then(user => {
+                    return responseWithTokens(req, res, user, 200)
+                })
+                .catch(error => {
+                    return responseWithTokens(req, res, error, 500)
+                })
+        } catch (error) {
+            return responseWithTokens(req, res, error, 500)
         }
     }
 
@@ -45,10 +60,10 @@ class UserController {
                     return responseWithTokens(req, res, users, 200)
                 })
                 .catch(error => {
-                    console.log(error)
+                    return responseWithTokens(req, res, error, 500)
                 })
         } catch (error) {
-            console.log(error)
+            return responseWithTokens(req, res, error, 500)
         }
     }
 
@@ -60,10 +75,10 @@ class UserController {
                     return responseWithTokens(req, res, users, 200)
                 })
                 .catch(error => {
-                    console.log(error)
+                    return responseWithTokens(req, res, error, 500)
                 })
         } catch (error) {
-            console.log(error)
+            return responseWithTokens(req, res, error, 500)
         }
     }
 

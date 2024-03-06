@@ -1,5 +1,7 @@
 'use strict'
 
+const UpdateChat = require("../..")
+const uploadToS3 = require("../AWS/s3")
 const messageModel = require("../models/message.model")
 const userService = require("../services/user.service")
 
@@ -35,7 +37,16 @@ class MessageService {
 
 
     sendMessage = async (message) => {
+        if (message.typeMessage === 'image') {
+            const promises = message.information.map(async (item) => {
+                return uploadToS3(`image_${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype)
+            });
+            const urls = await Promise.all(promises)
+            message.information = urls
+            message.reply = message.reply === 'null' ? null : message.reply
+        }
         return await messageModel.create(message)
+
     }
 
     updateMessage = async (message) => {

@@ -31,7 +31,7 @@ var roomSchema = new mongoose.Schema({
     },
     lastMessage: {
         information: {
-            type: String,
+            type: mongoose.Schema.Types.Mixed,
             default: 'Start messaging now !!!'
         },
         time: {

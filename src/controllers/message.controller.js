@@ -14,6 +14,16 @@ class MessageController {
             .catch(error => responseWithTokens(req, res, error, 500))
     }
 
+    sendMessageWithFiles = async (req, res) => {
+        const { room_id, reply, typeMessage, user_id } = req.body;
+        const information = req.files
+        messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
+            .then(message => {
+                return responseWithTokens(req, res, message, 200)
+            })
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
     updateMessage = async (req, res) => {
         const message = req.body
         messageService.updateMessage(message)

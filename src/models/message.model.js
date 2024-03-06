@@ -13,7 +13,7 @@ var MessageSchema = new mongoose.Schema({
         default: null
     },
     information: {
-        type: String,
+        type: mongoose.Schema.Types.Mixed,
         required: true
     },
     typeMessage: {

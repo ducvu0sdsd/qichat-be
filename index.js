@@ -2,16 +2,13 @@ const compression = require('compression')
 const express = require('express')
 const { default: helmet } = require('helmet')
 const morgan = require('morgan')
-const { Server } = require('socket.io')
 const app = express()
 const dotenv = require('dotenv')
 const https = require('http')
 const cors = require('cors');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
-const messageService = require('./src/services/message.service')
-const userService = require('./src/services/user.service')
-const roomService = require('./src/services/room.service')
+const socket = require('./src/utils/socket')
 const port = 8080
 const baseURL = 'https://www.qichat.online'
 // const baseURL = 'http://localhost:3000'
@@ -39,37 +36,8 @@ app.use('', require('./src/routes/index'))
 
 // socket realtime
 const server = https.createServer(app)
-const io = new Server(server, {
-    cors: {
-        cors: {
-            origin: baseURL,
-            methods: ["GET", "POST", "PUT", "DELETE"]
-        },
-    }
-})
 
-io.on('connection', (socket) => {
-    socket.on('send_emoji', async (data) => {
-        const { room_id } = data
-        await messageService.updateMessage(data)
-        io.emit(room_id, await messageService.getMessagesByRoom(room_id))
-    })
-    socket.on('send_message', async (data) => {
-        const { room_id, reply, information, typeMessage, user_id } = data
-        await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
-        await roomService.updateLastMessage(room_id, { information, time: new Date() })
-        io.emit(room_id, await messageService.getMessagesByRoom(room_id))
-        setTimeout(() => {
-            io.emit('update-operation')
-        }, 1000);
-    })
-    socket.on('update-room', () => {
-        io.emit('update-operation')
-    })
-    socket.on('close_operating', async (user) => {
-        await userService.updateOperating(user._id, user.operating)
-    })
-})
+socket(server, baseURL)
 
 server.listen(port, () => {
     console.log("Running with port " + port)
