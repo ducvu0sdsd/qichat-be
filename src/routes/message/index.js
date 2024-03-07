@@ -9,5 +9,6 @@ const router = express.Router()
 router.get('/get-messages-by-room/:id', middleware.checkToken, MessageController.getMessagesByRoom)
 router.put('/messages', middleware.checkToken, MessageController.updateMessage)
 router.post('/messages', middleware.checkToken, upload.array('information'), MessageController.sendMessageWithFiles)
+router.get('/messages/:id', middleware.checkToken, MessageController.getImageMessageByRoom)
 
 module.exports = router

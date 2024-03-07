@@ -31,5 +31,12 @@ class MessageController {
             .catch(error => responseWithTokens(req, res, error, 500))
     }
 
+    getImageMessageByRoom = async (req, res) => {
+        const { id } = req.params
+        messageService.getImageMessageByRoom(id)
+            .then(media => responseWithTokens(req, res, media, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
 }
 module.exports = new MessageController() 

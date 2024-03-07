@@ -29,7 +29,7 @@ const socket = (server, baseURL) => {
             await roomService.updateLastMessage(room_id, { information, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
-            io.emit('update-operation')
+            io.emit('update-operation-rooms')
         })
 
         socket.on('update-message', async (data) => {
@@ -38,15 +38,18 @@ const socket = (server, baseURL) => {
             await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' && 'Pictures'}`, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
-            io.emit('update-operation')
+            io.emit('update-operation-rooms')
         })
 
         socket.on('update-room', () => {
-            io.emit('update-operation')
+            io.emit('update-operation-rooms')
+            io.emit('update-operation-friends')
         })
 
         socket.on('close_operating', async (user) => {
             await userService.updateOperating(user._id, user.operating)
+            io.emit('update-operation-rooms')
+            io.emit('update-operation-friends')
         })
     })
 }

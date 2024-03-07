@@ -37,9 +37,9 @@ class MessageService {
 
 
     sendMessage = async (message) => {
-        if (message.typeMessage === 'image') {
+        if (message.typeMessage !== 'text') {
             const promises = message.information.map(async (item) => {
-                return uploadToS3(`image_${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype)
+                return uploadToS3(`${message.typeMessage}_${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype)
             });
             const urls = await Promise.all(promises)
             message.information = urls
@@ -52,6 +52,13 @@ class MessageService {
     updateMessage = async (message) => {
         await messageModel.findByIdAndUpdate(message._id, message, { new: true })
         return await this.getMessagesByRoom(message.room_id)
+    }
+
+    getImageMessageByRoom = async (room_id) => {
+        let messages = await messageModel.find({ room_id })
+        let media = messages.reduce((acc, curr) => acc.concat(curr.information), []);
+        media = media.filter(item => item.includes('.amazonaws.com/image_'))
+        return media
     }
 }
 module.exports = new MessageService()
