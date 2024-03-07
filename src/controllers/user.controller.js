@@ -86,7 +86,10 @@ class UserController {
         const { id } = req.params
         userService.getFriendsOperating(id)
             .then(users => responseWithTokens(req, res, users, 200))
-            .catch(error => responseWithTokens(req, res, error, 500))
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error, 500)
+            })
     }
 }
 

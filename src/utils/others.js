@@ -7,4 +7,4 @@ function shuffleArray(array) {
 }
 
 
-module.exports = { shuffleArray };
+module.exports = shuffleArray;
