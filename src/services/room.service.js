@@ -1,7 +1,5 @@
 
-const { Types, default: mongoose } = require('mongoose')
 const roomModel = require('../models/room.model')
-const sortTimeForRooms = require('../utils/time')
 const userService = require('./user.service')
 const sortByLastMessageTimeDescending = require('../utils/sortRoom')
 
@@ -14,6 +12,11 @@ class RoomService {
         const room = await roomModel.findById(id).lean()
         room.lastMessage = lastMessage
         return await roomModel.findByIdAndUpdate(id, room)
+    }
+
+    update = async (room, id) => {
+        await roomModel.findByIdAndUpdate(room._id, room)
+        return await this.getRoomsByUser(id)
     }
 
     getGroupsByUser = async (id) => {

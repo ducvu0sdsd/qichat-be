@@ -38,6 +38,14 @@ class RoomController {
                 return responseWithTokens(req, res, error, 500)
             })
     }
+
+    update = async (req, res) => {
+        const room = req.body
+        const { id } = req.params
+        roomService.update(room, id)
+            .then(newRooms => responseWithTokens(req, res, newRooms, 200))
+            .catch(error => responseWithTokens(req, res, error, 200))
+    }
 }
 
 module.exports = new RoomController()

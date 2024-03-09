@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 // Thiết lập múi giờ mặc định là 'Asia/Ho_Chi_Minh'
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
 
-// Declare the Schema of the Mongo model
+// Declare the Schema of the Mongo model 
 var roomSchema = new mongoose.Schema({
     users: [
         {
@@ -38,6 +38,10 @@ var roomSchema = new mongoose.Schema({
             type: Date,
             default: () => moment().toDate()
         }
+    },
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, { timestamps: true });
 

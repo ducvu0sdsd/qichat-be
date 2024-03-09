@@ -12,12 +12,13 @@ const socket = require('./src/utils/socket')
 const port = 8080
 const baseURL = 'https://www.qichat.online'
 // const baseURL = 'http://localhost:3000'
+const baseURLMobile = 'http://localhost:8081'
 
 // config
 dotenv.config();
 
 const corsOptions = {
-    origin: baseURL,
+    origin: [baseURL, baseURLMobile, 'http://192.168.1.170:8081'],
     allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'userid', 'admin']
 };
 

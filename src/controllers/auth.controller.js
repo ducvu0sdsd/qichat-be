@@ -26,10 +26,11 @@ class AccessController {
                     return res.status(200).json(response);
                 })
                 .catch((response) => {
-                    return res.status(500).json({ error: response });
+                    return responseWithTokens(req, res, response, 500)
                 });
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            return responseWithTokens(req, res, error, 500)
         }
     }
 
