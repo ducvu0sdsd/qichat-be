@@ -5,12 +5,15 @@ const responseWithTokens = require('../utils/response')
 class RoomController {
 
     createRoom = async (req, res) => {
-        const { name, users, type, image, creator } = req.body
+        const { name, type, creator } = req.body
+        const users = JSON.parse(req.body.users)
+        const image = req.file
         roomService.createRoom(users, name, type, image, creator)
             .then(room => {
                 return responseWithTokens(req, res, room, 201)
             })
             .catch(error => {
+                console.log(error)
                 return responseWithTokens(req, res, error, 500)
             })
     }

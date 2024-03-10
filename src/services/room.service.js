@@ -2,10 +2,15 @@
 const roomModel = require('../models/room.model')
 const userService = require('./user.service')
 const sortByLastMessageTimeDescending = require('../utils/sortRoom')
+const uploadToS3 = require('../AWS/s3')
 
 class RoomService {
-    createRoom = async (users, name, type, image = '', creator) => {
-        return await roomModel.create({ users, name, type, image, creator })
+    createRoom = async (users, name, type, image, creator) => {
+        let url = ''
+        if (image) {
+            url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+        }
+        return await roomModel.create({ users, name, type, image: image ? url : 'https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2152974972/settings_images/a05d7f7-f3b7-0102-a18b-52050e1111ad_noun-proactive-5427471-02_2.png', creator })
     }
 
     updateLastMessage = async (id, lastMessage) => {
