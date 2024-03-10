@@ -4,18 +4,25 @@ const userService = require('./user.service')
 const sortByLastMessageTimeDescending = require('../utils/sortRoom')
 
 class RoomService {
-    createRoom = async (users, name, type, image = '') => {
-        return await roomModel.create({ users, name, type, image })
+    createRoom = async (users, name, type, image = '', creator) => {
+        return await roomModel.create({ users, name, type, image, creator })
     }
 
     updateLastMessage = async (id, lastMessage) => {
-        const room = await roomModel.findById(id).lean()
-        room.lastMessage = lastMessage
-        return await roomModel.findByIdAndUpdate(id, room)
+        try {
+            const room = await roomModel.findById(id).lean()
+            room.lastMessage = lastMessage
+            return await roomModel.findByIdAndUpdate(id, room)
+        } catch (error) {
+
+        }
     }
 
     update = async (room, id) => {
-        await roomModel.findByIdAndUpdate(room._id, room)
+        const roomUpdated = await roomModel.findByIdAndUpdate(room._id, room, { new: true })
+        if (roomUpdated.users.length === 1) {
+            await roomModel.findByIdAndDelete(room._id)
+        }
         return await this.getRoomsByUser(id)
     }
 

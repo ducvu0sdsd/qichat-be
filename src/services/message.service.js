@@ -24,7 +24,7 @@ class MessageService {
 
         const usersPromise = await Promise.all(usersPromises)
         usersPromise.forEach(user => {
-            users[user._id.toString()] = user
+            users[user?._id.toString()] = user
         })
 
         messages = messages.map(message => ({
