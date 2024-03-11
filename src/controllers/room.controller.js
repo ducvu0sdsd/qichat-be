@@ -47,7 +47,14 @@ class RoomController {
         const { id } = req.params
         roomService.update(room, id)
             .then(newRooms => responseWithTokens(req, res, newRooms, 200))
-            .catch(error => responseWithTokens(req, res, error, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    delete = async (req, res) => {
+        const { id } = req.params
+        roomService.delete(id)
+            .then(newRooms => responseWithTokens(req, res, newRooms, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
     }
 }
 

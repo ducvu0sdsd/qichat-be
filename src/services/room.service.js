@@ -26,7 +26,7 @@ class RoomService {
     update = async (room, id) => {
         const roomUpdated = await roomModel.findByIdAndUpdate(room._id, room, { new: true })
         if (roomUpdated.users.length === 1) {
-            await roomModel.findByIdAndDelete(room._id)
+            await this.delete(room._id)
         }
         return await this.getRoomsByUser(id)
     }
@@ -59,6 +59,10 @@ class RoomService {
             }
         })
         return sortByLastMessageTimeDescending(roomsByUser)
+    }
+
+    delete = async (id) => {
+        return await roomModel.findByIdAndDelete(id)
     }
 }
 
