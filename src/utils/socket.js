@@ -17,7 +17,7 @@ const socket = (server, baseURL) => {
 
     io.on('connection', (socket) => {
 
-        socket.on('send_emoji', async (data) => {
+        socket.on('send_emoji_disable', async (data) => {
             const { room_id } = data
             await messageService.updateMessage(data)
             io.emit(room_id, await messageService.getMessagesByRoom(room_id))
@@ -34,7 +34,6 @@ const socket = (server, baseURL) => {
 
         socket.on('update-message', async (data) => {
             const { room_id, information, type } = data
-            console.log(room_id, information, type)
             await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' && 'Pictures'}`, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
