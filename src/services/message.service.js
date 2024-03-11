@@ -46,7 +46,6 @@ class MessageService {
             message.reply = message.reply === 'null' ? null : message.reply
         }
         return await messageModel.create(message)
-
     }
 
     updateMessage = async (message) => {
@@ -54,10 +53,10 @@ class MessageService {
         return await this.getMessagesByRoom(message.room_id)
     }
 
-    getImageMessageByRoom = async (room_id) => {
+    getMediaMessageByRoom = async (room_id) => {
         let messages = await messageModel.find({ room_id })
         let media = messages.reduce((acc, curr) => acc.concat(curr.information), []);
-        media = media.filter(item => item.includes('.amazonaws.com/image_'))
+        media = media.filter(item => item.includes('.amazonaws.com/image_') || item.includes('.amazonaws.com/video_'))
         return media
     }
 }

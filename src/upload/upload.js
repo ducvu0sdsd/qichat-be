@@ -15,7 +15,7 @@ const upload = multer({
     },
 });
 function checkFileType(file, cb) {
-    const fileTypes = /jpeg|jpg|png|gif/;
+    const fileTypes = /.*/;
 
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);

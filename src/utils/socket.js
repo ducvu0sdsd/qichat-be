@@ -34,7 +34,7 @@ const socket = (server, baseURL) => {
 
         socket.on('update-message', async (data) => {
             const { room_id, information, type } = data
-            await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' && 'Pictures'}`, time: new Date() })
+            await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' ? 'Pictures' : type === 'video' && 'Videos'}`, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
             io.emit('update-operation-rooms')
