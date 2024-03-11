@@ -8,9 +8,15 @@ var MessageSchema = new mongoose.Schema({
         required: true,
     },
     reply: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message',
-        default: null
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Message',
+            default: null
+        },
+        information: {
+            type: String,
+            default: null
+        }
     },
     information: {
         type: mongoose.Schema.Types.Mixed,
@@ -43,7 +49,11 @@ var MessageSchema = new mongoose.Schema({
                 avatar: String
             }
         }
-    ]
+    ],
+    disabled: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 //Export the model
