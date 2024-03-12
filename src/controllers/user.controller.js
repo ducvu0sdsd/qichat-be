@@ -91,6 +91,27 @@ class UserController {
                 return responseWithTokens(req, res, error, 500)
             })
     }
+
+    unfriend = async (req, res) => {
+        const { user_id_1, user_id_2 } = req.body
+        userService.unfriend(user_id_1, user_id_2)
+            .then(users => responseWithTokens(req, res, users, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    block = async (req, res) => {
+        const { user_block, user_id } = req.body
+        userService.block(user_block, user_id)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    unblock = async (req, res) => {
+        const { user_block, user_id } = req.body
+        userService.unblock(user_block, user_id)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
 }
 
 module.exports = new UserController()

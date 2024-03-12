@@ -68,6 +68,37 @@ class UserService {
         })
         return shuffleArray(friends.filter(friend => friend.operating.status === true))
     }
+
+    unfriend = async (user_id_1, user_id_2) => {
+        const user1 = await userModel.findById(user_id_1)
+        const user2 = await userModel.findById(user_id_2)
+        user1.friends = user1.friends.filter(friend => friend._id.toString() !== user2._id.toString())
+        user2.friends = user2.friends.filter(friend => friend._id.toString() !== user1._id.toString())
+        const user1Updated = await userModel.findByIdAndUpdate(user1._id, user1, { new: true })
+        const user2Updated = await userModel.findByIdAndUpdate(user2._id, user2, { new: true })
+        return {
+            [user1._id]: user1Updated,
+            [user2._id]: user2Updated
+        }
+    }
+
+    block = async (user_id_1, user_id_2) => {
+        const user1 = await userModel.findById(user_id_1)
+        user1.friends.filter(item => item._id.toString() === user_id_2.toString())[0].block = true
+        const userUpdated = await userModel.findByIdAndUpdate(user_id_1, user1, { new: true })
+        if (userUpdated)
+            userUpdated.password = ''
+        return userUpdated
+    }
+
+    unblock = async (user_id_1, user_id_2) => {
+        const user1 = await userModel.findById(user_id_1)
+        user1.friends.filter(item => item._id.toString() === user_id_2.toString())[0].block = false
+        const userUpdated = await userModel.findByIdAndUpdate(user_id_1, user1, { new: true })
+        if (userUpdated)
+            userUpdated.password = ''
+        return userUpdated
+    }
 }
 
 module.exports = new UserService()

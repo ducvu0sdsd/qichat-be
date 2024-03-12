@@ -7,10 +7,23 @@ const uploadToS3 = require('../AWS/s3')
 class RoomService {
     createRoom = async (users, name, type, image, creator) => {
         let url = ''
+        let created = false
         if (image) {
             url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
         }
-        return await roomModel.create({ users, name, type, image: image ? url : 'https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2152974972/settings_images/a05d7f7-f3b7-0102-a18b-52050e1111ad_noun-proactive-5427471-02_2.png', creator })
+        if (type === 'Single') {
+            const rooms = await this.getRoomsByUser(users[0]._id)
+            rooms.forEach(room => {
+                if (room.users.map(item => item._id.toString()).includes(users[1]._id.toString())) {
+                    created = true
+                }
+            })
+        }
+        if (created) {
+            return null;
+        } else {
+            return await roomModel.create({ users, name, type, image: image ? url : 'https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2152974972/settings_images/a05d7f7-f3b7-0102-a18b-52050e1111ad_noun-proactive-5427471-02_2.png', creator })
+        }
     }
 
     updateLastMessage = async (id, lastMessage) => {
@@ -52,7 +65,8 @@ class RoomService {
             if (userIds.includes(id)) {
                 let arr = room.users.map(user => {
                     const userFound = users.filter(item => item._id.toString() === user._id.toString())[0]
-                    return { ...user, operating: userFound.operating }
+                    userFound.password = ''
+                    return userFound
                 })
                 room.users = arr
                 roomsByUser.push(room);

@@ -13,7 +13,6 @@ class RoomController {
                 return responseWithTokens(req, res, room, 201)
             })
             .catch(error => {
-                console.log(error)
                 return responseWithTokens(req, res, error, 500)
             })
     }

@@ -81,7 +81,6 @@ class RequestService {
 
         // Create Room For 2 User
         await roomService.createRoom([user1, user2], 'none', 'Single')
-
         return { user: newUser, requests }
     }
 }
