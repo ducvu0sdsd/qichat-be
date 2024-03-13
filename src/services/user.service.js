@@ -22,7 +22,7 @@ class UserService {
         try {
             let user = await userModel.findById(id)
             user.operating = operating
-            await userModel.findByIdAndUpdate(id, user, { new: true })
+            return await userModel.findByIdAndUpdate(id, user, { new: true })
         } catch (error) {
 
         }

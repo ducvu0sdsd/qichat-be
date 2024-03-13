@@ -24,12 +24,15 @@ const socket = (server, baseURL) => {
         })
 
         socket.on('send_message', async (data) => {
-            const { room_id, reply, information, typeMessage, user_id } = data
+            const { room_id, reply, information, typeMessage, user_id, users } = data
             await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
             await roomService.updateLastMessage(room_id, { information, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
-            io.emit('update-operation-rooms')
+            const body = {
+                friends_id: users
+            }
+            io.emit('update-operation-rooms', body)
         })
 
         socket.on('update-message', async (data) => {
@@ -37,18 +40,27 @@ const socket = (server, baseURL) => {
             await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' ? 'Pictures' : type === 'video' && 'Videos'}`, time: new Date() })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
-            io.emit('update-operation-rooms')
+            const body = {
+                room_id
+            }
+            io.emit('update-operation-rooms', body)
         })
 
-        socket.on('update-room', () => {
-            io.emit('update-operation-rooms')
-            io.emit('update-operation-friends')
+        socket.on('update-room', (friends_id) => {
+            const body = {
+                friends_id
+            }
+            io.emit('update-operation-rooms', body)
+            io.emit('update-operation-friends', body)
         })
 
         socket.on('close_operating', async (user) => {
-            await userService.updateOperating(user._id, user.operating)
-            io.emit('update-operation-rooms')
-            io.emit('update-operation-friends')
+            const userUpdated = await userService.updateOperating(user._id, user.operating)
+            const body = {
+                friends_id: userUpdated.friends.map(item => item._id)
+            }
+            io.emit('update-operation-rooms', body)
+            io.emit('update-operation-friends', body)
         })
     })
 }
