@@ -10,8 +10,8 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
 const socket = require('./src/utils/socket')
 const port = 8080
-// const baseURL = 'https://www.qichat.online'
-const baseURL = 'http://localhost:3000'
+const baseURL = 'https://www.qichat.online'
+// const baseURL = 'http://localhost:3000'
 const baseURLMobile = 'http://localhost:8081'
 
 // config
