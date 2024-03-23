@@ -4,8 +4,35 @@ const userModel = require("../models/user.model")
 const bcrypt = require('bcryptjs');
 const authUtils = require("../utils/auth")
 const jwt = require('jsonwebtoken');
+const { sendMail, generateRandomNumber } = require("../utils/mailer");
+let QUEUE_VERIFICATIONS = []
 
 class AuthService {
+
+    sendVerifyCodeEmail = async (email) => {
+        const emailFound = QUEUE_VERIFICATIONS.filter(item => item.email === email)[0]
+        let code = generateRandomNumber()
+        if (emailFound) {
+            code = emailFound.verifyCode
+        } else {
+            QUEUE_VERIFICATIONS.push({ email, verifyCode: code })
+        }
+        sendMail(email, 'Verification Your Gmail', `<p>Code: ${code}</p>`)
+    }
+
+    verifyEmail = async (email, code) => {
+        const emailFound = QUEUE_VERIFICATIONS.filter(item => item.email === email)[0]
+        if (emailFound) {
+            if (emailFound.verifyCode === code) {
+                QUEUE_VERIFICATIONS = QUEUE_VERIFICATIONS.filter(item => item.email !== email)
+                return { message: 'Verify Email Successfully!!!' }
+            } else {
+                throw new Error("Verify code don't match")
+            }
+        } else {
+            throw new Error('Email Verify Invalid')
+        }
+    }
 
     signUp = async (phone, password) => {
         const user = await userModel.findOne({ phone })

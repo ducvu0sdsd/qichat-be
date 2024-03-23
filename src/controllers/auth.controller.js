@@ -6,6 +6,18 @@ const responseWithTokens = require("../utils/response");
 
 class AccessController {
 
+    sendVerifyCodeEmail = async (req, res) => {
+        const { email } = req.params
+        authService.sendVerifyCodeEmail(email)
+    }
+
+    verifyEmail = async (req, res) => {
+        const { code, email } = req.body
+        authService.verifyEmail(email, code)
+            .then(result => responseWithTokens(req, res, result, 200))
+            .catch(error => responseWithTokens(req, res, error.message, 500))
+    }
+
     signUp = async (req, res) => {
         const { phone, password } = req.body;
         authService.signUp(phone, password)
