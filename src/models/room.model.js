@@ -13,7 +13,12 @@ var roomSchema = new mongoose.Schema({
                 ref: 'User'
             },
             fullName: String,
-            avatar: String
+            avatar: String,
+            seen: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Message',
+                default: null
+            }
         }
     ],
     name: {

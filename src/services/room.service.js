@@ -65,6 +65,7 @@ class RoomService {
             if (userIds.includes(id)) {
                 let arr = room.users.map(user => {
                     const userFound = users.filter(item => item._id.toString() === user._id.toString())[0]
+                    userFound.seen = user.seen
                     userFound.password = ''
                     return userFound
                 })
@@ -77,6 +78,16 @@ class RoomService {
 
     delete = async (id) => {
         return await roomModel.findByIdAndDelete(id)
+    }
+
+    updateSeen = async (room_id, user_id, seen) => {
+        const filter = { _id: room_id, "users._id": user_id };
+        const update = { $set: { "users.$.seen": seen } };
+
+        const options = { new: true };
+        const updatedRoom = await roomModel.findOneAndUpdate(filter, update, options);
+
+        return updatedRoom;
     }
 }
 

@@ -24,7 +24,7 @@ var MessageSchema = new mongoose.Schema({
     },
     typeMessage: {
         type: String,
-        enum: ['text', 'image', 'video', 'voice'],
+        enum: ['text', 'image', 'video', 'voice', 'notify'],
         required: true,
         default: 'text'
     },

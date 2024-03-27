@@ -17,7 +17,13 @@ const socket = (server, baseURL) => {
 
     io.on('connection', (socket) => {
 
-        socket.on('send_emoji_disable', async (data) => {
+        socket.on('update_seen', async (data) => {
+            const { user_id, seen, room_id, users } = data
+            const room = await roomService.updateSeen(room_id, user_id, seen)
+            io.emit(`update_seen_${room_id}`, room)
+        })
+
+        socket.on('send_emoji_or_disable', async (data) => {
             const { room_id } = data
             await messageService.updateMessage(data)
             io.emit(room_id, await messageService.getMessagesByRoom(room_id))
@@ -57,7 +63,7 @@ const socket = (server, baseURL) => {
         socket.on('close_operating', async (user) => {
             const userUpdated = await userService.updateOperating(user._id, user.operating)
             const body = {
-                friends_id: userUpdated.friends.map(item => item._id)
+                friends_id: userUpdated?.friends.map(item => item._id)
             }
             io.emit('update-operation-rooms', body)
             io.emit('update-operation-friends', body)

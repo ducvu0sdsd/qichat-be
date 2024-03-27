@@ -6,7 +6,7 @@ const shuffleArray = require("../utils/others")
 class UserService {
 
     findAll = async () => {
-        return await userModel.find()
+        return await userModel.find().lean()
     }
 
     update = async (id, body) => {

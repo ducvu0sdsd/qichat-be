@@ -37,7 +37,7 @@ class MessageService {
 
 
     sendMessage = async (message) => {
-        if (message.typeMessage !== 'text') {
+        if (message.typeMessage !== 'text' && message.typeMessage !== 'notify') {
             const promises = message.information.map(async (item) => {
                 return uploadToS3(`${message.typeMessage}_${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype)
             });
