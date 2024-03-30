@@ -9,7 +9,7 @@ const storage = multer.memoryStorage({
 });
 const upload = multer({
     storage,
-    limits: { fileSize: 20000000 }, // Chỉ cho phép file tối đa là 20MB
+    limits: { fileSize: 50000000 }, // Chỉ cho phép file tối đa là 50MB
     fileFilter(req, file, cb) {
         checkFileType(file, cb);
     },

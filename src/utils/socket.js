@@ -20,7 +20,9 @@ const socket = (server, baseURL) => {
         socket.on('update_seen', async (data) => {
             const { user_id, seen, room_id, users } = data
             const room = await roomService.updateSeen(room_id, user_id, seen)
+            const rooms = await roomService.getRoomsByUser(user_id)
             io.emit(`update_seen_${room_id}`, room)
+            io.emit(`${user_id}`, rooms)
         })
 
         socket.on('send_emoji_or_disable', async (data) => {
@@ -31,8 +33,8 @@ const socket = (server, baseURL) => {
 
         socket.on('send_message', async (data) => {
             const { room_id, reply, information, typeMessage, user_id, users } = data
-            await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
-            await roomService.updateLastMessage(room_id, { information, time: new Date() })
+            const newMessage = await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
+            await roomService.updateLastMessage(room_id, { information, time: new Date(), user_id, _id: newMessage._id })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
             const body = {
@@ -42,12 +44,12 @@ const socket = (server, baseURL) => {
         })
 
         socket.on('update-message', async (data) => {
-            const { room_id, information, type } = data
-            await roomService.updateLastMessage(room_id, { information: `Sent ${information} ${type === 'image' ? 'Pictures' : type === 'video' && 'Videos'}`, time: new Date() })
+            const { room_id, information, user_id, users, _id } = data
+            await roomService.updateLastMessage(room_id, { information: `Sent ${information === 1 ? information + ' file' : information + ' files'}`, time: new Date(), user_id, _id })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
             const body = {
-                room_id
+                friends_id: users
             }
             io.emit('update-operation-rooms', body)
         })

@@ -35,6 +35,16 @@ var roomSchema = new mongoose.Schema({
         default: ''
     },
     lastMessage: {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Message',
+            default: null
+        },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: null
+        },
         information: {
             type: mongoose.Schema.Types.Mixed,
             default: 'Start messaging now !!!'

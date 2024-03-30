@@ -9,7 +9,7 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const bucketName = process.env.S3_BUCKET_NAME
 
-const uploadToS3 = (filePath, file, type) => new Promise((reject, resolve) => {
+const uploadToS3 = (filePath, file, type, name, size) => new Promise((reject, resolve) => {
     {
         const paramsS3 = {
             Bucket: bucketName,
@@ -23,7 +23,7 @@ const uploadToS3 = (filePath, file, type) => new Promise((reject, resolve) => {
 
             } else {
                 const imageURL = data.Location
-                reject(imageURL)
+                reject({ url: imageURL, name, size: Number(size.toFixed(2)) })
             }
         })
     }

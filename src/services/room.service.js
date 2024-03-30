@@ -64,7 +64,7 @@ class RoomService {
             const userIds = room.users.map(user => user._id.toString()); // Chuyển đổi ObjectId thành chuỗi
             if (userIds.includes(id)) {
                 let arr = room.users.map(user => {
-                    const userFound = users.filter(item => item._id.toString() === user._id.toString())[0]
+                    const userFound = JSON.parse(JSON.stringify(users.filter(item => item._id.toString() === user._id.toString())[0]))
                     userFound.seen = user.seen
                     userFound.password = ''
                     return userFound

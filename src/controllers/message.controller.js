@@ -15,9 +15,9 @@ class MessageController {
     }
 
     sendMessageWithFiles = async (req, res) => {
-        const { room_id, reply, typeMessage, user_id } = req.body;
+        const { room_id, reply, user_id, file_title } = req.body;
         const information = req.files
-        messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
+        messageService.sendMessage({ room_id, reply, information, typeMessage: 'file', user_id, file_title })
             .then(message => {
                 return responseWithTokens(req, res, message, 200)
             })
@@ -35,7 +35,14 @@ class MessageController {
         const { id } = req.params
         messageService.getMediaMessageByRoom(id)
             .then(media => responseWithTokens(req, res, media, 200))
-            .catch(error => responseWithTokens(req, res, error, 500))
+            .catch(error => responseWithTokens(req, res, error.message, 500))
+    }
+
+    getFilesMessageByRoom = async (req, res) => {
+        const { id } = req.params
+        messageService.getFileMessageByRoom(id)
+            .then(media => responseWithTokens(req, res, media, 200))
+            .catch(error => responseWithTokens(req, res, error.message, 500))
     }
 
 }

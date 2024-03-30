@@ -37,7 +37,7 @@ class RoomController {
             })
             .catch(error => {
                 console.log(error)
-                return responseWithTokens(req, res, error, 500)
+                return responseWithTokens(req, res, error.message, 500)
             })
     }
 
