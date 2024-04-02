@@ -38,6 +38,7 @@ class UserService {
         } else {
             const isPasswordMatch = await AuthUtils.comparePasswords(password, user.password);
             if (isPasswordMatch == true) {
+                console.log(newPassword)
                 const hashedNewPassword = await AuthUtils.hashPassword(newPassword);
                 const updatedUser = await userModel.findByIdAndUpdate(id, { password: hashedNewPassword }, { new: true });
                 return updatedUser;
