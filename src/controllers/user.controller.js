@@ -14,6 +14,17 @@ class UserController {
             .catch(error => responseWithTokens(req, res, error.message, 500))
     }
 
+    updatePassWord = (req, res) => {
+        const id = req.params.id;
+        const { password, newPassword } = req.body
+        userService.updatePassword(id, password, newPassword)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error.message, 500)
+            })
+    }
+
     update = async (req, res) => {
         try {
             const id = req.params.id;
@@ -83,10 +94,10 @@ class UserController {
                     return responseWithTokens(req, res, users, 200)
                 })
                 .catch(error => {
-                    return responseWithTokens(req, res, error, 500)
+                    return responseWithTokens(req, res, error.message, 500)
                 })
         } catch (error) {
-            return responseWithTokens(req, res, error, 500)
+            return responseWithTokens(req, res, error.message, 500)
         }
     }
 

@@ -13,6 +13,14 @@ class AuthUtils {
             throw new Error('Error hashing password');
         }
     })
+    comparePasswords = async (plainPassword, hashedPassword) => {
+        try {
+            const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
+            return isMatch;
+        } catch (error) {
+            throw new Error('Error comparing passwords');
+        }
+    };
 }
 
 module.exports = new AuthUtils()

