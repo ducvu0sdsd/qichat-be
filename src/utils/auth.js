@@ -10,6 +10,7 @@ class AuthUtils {
             const hashedPassword = await bcrypt.hash(password, salt);
             rejects(hashedPassword);
         } catch (error) {
+            console.log(error)
             throw new Error('Error hashing password');
         }
     })
