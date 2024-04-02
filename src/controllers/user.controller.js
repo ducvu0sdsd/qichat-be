@@ -6,6 +6,14 @@ const responseWithTokens = require("../utils/response");
 
 class UserController {
 
+    updateInformation = (req, res) => {
+        const user = JSON.parse(req.body.user)
+        const image = req.file
+        userService.updateInformation(user, image)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => responseWithTokens(req, res, error.message, 500))
+    }
+
     update = async (req, res) => {
         try {
             const id = req.params.id;

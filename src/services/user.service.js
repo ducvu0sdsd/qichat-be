@@ -1,5 +1,6 @@
 'use strict'
 
+const uploadToS3 = require("../AWS/s3")
 const userModel = require("../models/user.model")
 const shuffleArray = require("../utils/others")
 
@@ -7,6 +8,14 @@ class UserService {
 
     findAll = async () => {
         return await userModel.find().lean()
+    }
+
+    updateInformation = async (user, image) => {
+        let url = ''
+        if (image) {
+            url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+        }
+        return await userModel.findByIdAndUpdate(user._id, user, { new: true })
     }
 
     update = async (id, body) => {
