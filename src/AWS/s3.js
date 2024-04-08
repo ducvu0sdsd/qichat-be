@@ -23,7 +23,7 @@ const uploadToS3 = (filePath, file, type, name, size) => new Promise((reject, re
 
             } else {
                 const imageURL = data.Location
-                reject({ url: imageURL, name, size: Number(size.toFixed(2)) })
+                reject({ url: imageURL, name, size: Number(size?.toFixed(2)) })
             }
         })
     }

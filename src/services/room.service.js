@@ -14,8 +14,10 @@ class RoomService {
         if (type === 'Single') {
             const rooms = await this.getRoomsByUser(users[0]._id)
             rooms.forEach(room => {
-                if (room.users.map(item => item._id.toString()).includes(users[1]._id.toString())) {
-                    created = true
+                if (room.type === 'Single') {
+                    if (room.users.map(item => item._id.toString()).includes(users[1]._id.toString())) {
+                        created = true
+                    }
                 }
             })
         }

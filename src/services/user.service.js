@@ -12,10 +12,20 @@ class UserService {
     }
 
     updateInformation = async (user, image) => {
-        const userFound = await userModel.findById(user._id).lean()
+        const userFound = await userModel.findById(user._id)
+        if (!userFound) {
+            throw new Error("User not found")
+        }
         user.password = userFound.password
         if (image) {
-            user.avatar = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+            if (image.originalname) {
+                const url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+                user.avatar = url.url
+            } else {
+                const fileData = await Buffer.from(image.base64, 'base64');
+                const url = await uploadToS3(`image_${Date.now().toString()}_${image.fileName.split('.')[0]}`, fileData, image.mimeType)
+                user.avatar = url.url
+            }
         }
         return await userModel.findByIdAndUpdate(user._id, user, { new: true })
     }

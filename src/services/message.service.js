@@ -38,7 +38,8 @@ class MessageService {
 
     sendMessage = async (message) => {
         if (message.typeMessage !== 'text' && message.typeMessage !== 'notify') {
-            const promises = message.information.map(async (item, index) => {
+            let promises = []
+            promises = message.information.map(async (item, index) => {
                 return uploadToS3(`${item.mimetype.split('/')[0] !== 'application' ? item.mimetype.split('/')[0] : item.originalname.split('.')[item.originalname.split('.').length - 1]}___${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype, message.file_title[index + 1], item.size / 1024)
             });
             const urls = await Promise.all(promises)
@@ -54,15 +55,25 @@ class MessageService {
     }
 
     getMediaMessageByRoom = async (room_id) => {
-        let messages = await messageModel.find({ room_id })
-        let media = messages.reduce((acc, curr) => acc.concat(curr.information), []);
-        media = media.filter(item => item.url.includes('.amazonaws.com/image_') || item.url.includes('.amazonaws.com/video_'))
-        return media
+        let messages = await messageModel.find({ room_id });
+        let media = messages.reduce((acc, curr) => {
+            if (curr.typeMessage === 'file') {
+                return acc.concat(curr.information);
+            }
+            return acc;
+        }, []);
+        media = media.filter(item => item.url.includes('.amazonaws.com/image_') || item.url.includes('.amazonaws.com/video_'));
+        return media;
     }
 
     getFileMessageByRoom = async (room_id) => {
-        let messages = await messageModel.find({ room_id })
-        let files = messages.reduce((acc, curr) => acc.concat(curr.information), []);
+        let messages = await messageModel.find({ room_id });
+        let files = messages.reduce((acc, curr) => {
+            if (curr.typeMessage === 'file') {
+                return acc.concat(curr.information);
+            }
+            return acc;
+        }, []);
         files = files.filter(item => (!item.url.includes('.amazonaws.com/image___') && !item.url.includes('.amazonaws.com/video___')))
         return files
     }

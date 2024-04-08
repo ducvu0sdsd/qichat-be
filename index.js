@@ -8,8 +8,10 @@ const https = require('http')
 const cors = require('cors');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh');
+const bodyParser = require('body-parser');
 const socket = require('./src/utils/socket')
 const port = 8080
+
 // const baseURL = 'https://www.qichat.online'
 const baseURL = 'http://localhost:3000'
 const baseURLMobile = 'http://localhost:8081'
@@ -18,10 +20,13 @@ const baseURLMobile = 'http://localhost:8081'
 dotenv.config();
 
 const corsOptions = {
-    origin: [baseURL, baseURLMobile, 'http://192.168.1.170:8081'],
+    origin: [baseURL, baseURLMobile],
     allowedHeaders: ['Content-Type', 'accessToken', 'refreshToken', 'userid', 'admin']
 };
 
+// Tăng giới hạn kích thước yêu cầu lên 50MB
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // init middleware
 app.use(morgan('dev'))
 app.use(helmet())

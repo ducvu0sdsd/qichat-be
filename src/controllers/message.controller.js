@@ -1,6 +1,7 @@
 'use strict'
 
-const messageService = require('../services/message.service')
+const messageService = require('../services/message.service');
+const roomService = require('../services/room.service');
 const responseWithTokens = require('../utils/response');
 
 class MessageController {
@@ -35,7 +36,10 @@ class MessageController {
         const { id } = req.params
         messageService.getMediaMessageByRoom(id)
             .then(media => responseWithTokens(req, res, media, 200))
-            .catch(error => responseWithTokens(req, res, error.message, 500))
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error.message, 500)
+            })
     }
 
     getFilesMessageByRoom = async (req, res) => {
@@ -43,6 +47,30 @@ class MessageController {
         messageService.getFileMessageByRoom(id)
             .then(media => responseWithTokens(req, res, media, 200))
             .catch(error => responseWithTokens(req, res, error.message, 500))
+    }
+
+    sendMessageWithFilesMobile = async (req, res) => {
+        try {
+            const { room_id, reply, information, user_id, users, typeMessage } = req.body
+            let file_title = ['']
+            let processedInformation = await Promise.all(information.map(async item => {
+                const buffer = await Buffer.from(item.base64, 'base64');
+                file_title.push(item.originalname.split('.')[0])
+                return {
+                    originalname: item.originalname,
+                    mimetype: item.mimetype,
+                    buffer,
+                    size: item.size,
+                };
+            }));
+            const newMessage = await messageService.sendMessage({ room_id, reply, information: processedInformation, user_id, file_title, typeMessage })
+            await roomService.updateLastMessage(room_id, { information: `Sent ${information.length} ${information.length === 1 ? "file" : "files"}`, time: new Date(), user_id, _id: newMessage._id })
+            const messages = await messageService.getMessagesByRoom(room_id)
+            return responseWithTokens(req, res, messages, 200)
+        } catch (error) {
+            console.log(error)
+            return responseWithTokens(req, res, error.message, 500)
+        }
     }
 
 }

@@ -8,10 +8,16 @@ class UserController {
 
     updateInformation = (req, res) => {
         const user = JSON.parse(req.body.user)
-        const image = req.file
+        let image = req.file
+        if (req.body.image) {
+            image = JSON.parse(req.body.image)
+        }
         userService.updateInformation(user, image)
             .then(user => responseWithTokens(req, res, user, 200))
-            .catch(error => responseWithTokens(req, res, error.message, 500))
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error.message, 500)
+            })
     }
 
     updatePassWord = (req, res) => {
