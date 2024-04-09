@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const authUtils = require("../utils/auth")
 const jwt = require('jsonwebtoken');
 const { sendMail, generateRandomNumber } = require("../utils/mailer");
+const userService = require("./user.service");
 let QUEUE_VERIFICATIONS = []
 
 class AuthService {
@@ -49,8 +50,13 @@ class AuthService {
     signIn = async (phone, pass) => {
         try {
             const user = await userModel.findOne({ phone })
+            const users = await userService.findAll()
             const isMatch = await bcrypt.compare(pass, user.password);
             user.password = ''
+            user.friends = user.friends.map(friend => {
+                const friendFound = users.filter(item => item._id.toString() === friend._id.toString())[0]
+                return friendFound
+            })
             if (isMatch) {
                 if (user.statusSignUp === 'Complete Sign Up') {
                     return {

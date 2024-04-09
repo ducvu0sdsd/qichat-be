@@ -82,6 +82,12 @@ class AccessController {
 
     getUserByID = async (req, res) => {
         const user = await userService.findByID(req.headers.userid)
+        const users = await userService.findAll()
+        user.password = ''
+        user.friends = user.friends.map(friend => {
+            const friendFound = users.filter(item => item._id.toString() === friend._id.toString())[0]
+            return friendFound
+        })
         return responseWithTokens(req, res, user, 200)
     }
 }
