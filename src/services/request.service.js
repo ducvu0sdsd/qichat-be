@@ -60,9 +60,10 @@ class RequestService {
         if (userFull_1.friends.map(user => user._id).includes(userFull_2._id)) {
             throw new Error('2 Users already make friend each other')
         }
-
-        userFull_1.friends.push(user2)
-        userFull_2.friends.push(user1)
+        if (!userFull_1.friends.map(item => item._id).includes(user2._id) && !userFull_2.friends.map(item => item._id).includes(user1._id)) {
+            userFull_1.friends.push(user2)
+            userFull_2.friends.push(user1)
+        }
         await userService.update(userFull_1._id, userFull_1)
         const newUser = await userService.update(userFull_2._id, userFull_2)
 

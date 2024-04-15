@@ -37,6 +37,7 @@ class MessageService {
 
 
     sendMessage = async (message) => {
+        console.log(message)
         if (message.typeMessage !== 'text' && message.typeMessage !== 'notify') {
             let promises = []
             promises = message.information.map(async (item, index) => {

@@ -105,7 +105,7 @@ class UserService {
         const friends = users.filter(user => {
             return ownUser.friends.map(item => item._id.toString()).includes(user._id.toString())
         })
-        return shuffleArray(friends.filter(friend => friend.operating.status === true))
+        return friends.filter(friend => friend.operating.status === true)
     }
 
     unfriend = async (user_id_1, user_id_2) => {

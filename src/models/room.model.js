@@ -43,7 +43,7 @@ var roomSchema = new mongoose.Schema({
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            default: null
+            default: '5f4a3e1b2c3d4e5f67890abc'
         },
         information: {
             type: mongoose.Schema.Types.Mixed,

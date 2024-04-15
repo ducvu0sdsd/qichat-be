@@ -17,6 +17,21 @@ class RoomController {
             })
     }
 
+    createRoomMobile = async (req, res) => {
+        const { name, type, creator, users, image } = req.body
+        if (image) {
+            const buffer = await Buffer.from(image.base64, 'base64');
+            image.buffer = buffer
+        }
+        roomService.createRoom(users, name, type, image, creator)
+            .then(room => {
+                return responseWithTokens(req, res, room, 201)
+            })
+            .catch(error => {
+                return responseWithTokens(req, res, error.Message, 500)
+            })
+    }
+
     getGroupsByUser = async (req, res) => {
         const { id } = req.params
         roomService.getGroupsByUser(id)

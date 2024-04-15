@@ -24,7 +24,7 @@ class RoomService {
         if (created) {
             return null;
         } else {
-            return await roomModel.create({ users, name, type, image: image ? url : 'https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2152974972/settings_images/a05d7f7-f3b7-0102-a18b-52050e1111ad_noun-proactive-5427471-02_2.png', creator })
+            return await roomModel.create({ users, name, type, image: image ? url.url : 'https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2152974972/settings_images/a05d7f7-f3b7-0102-a18b-52050e1111ad_noun-proactive-5427471-02_2.png', creator })
         }
     }
 
