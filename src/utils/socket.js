@@ -32,10 +32,9 @@ const socket = (server, baseURL) => {
         })
 
         socket.on('send_message', async (data) => {
-            const { room_id, reply, information, typeMessage, user_id, users } = data
-            console.log(typeMessage, user_id)
-            const newMessage = await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id })
-            await roomService.updateLastMessage(room_id, { information, time: new Date(), user_id, _id: newMessage._id })
+            const { room_id, reply, information, typeMessage, user_id, users, transfer = false } = data
+            const newMessage = await messageService.sendMessage({ room_id, reply, information, typeMessage, user_id, transfer })
+            await roomService.updateLastMessage(room_id, { information: transfer === false ? information : 'Transfer 1 message', time: new Date(), user_id, _id: newMessage._id })
             const messages = await messageService.getMessagesByRoom(room_id)
             io.emit(room_id, messages)
             const body = {

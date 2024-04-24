@@ -37,8 +37,7 @@ class MessageService {
 
 
     sendMessage = async (message) => {
-        console.log(message)
-        if (message.typeMessage !== 'text' && message.typeMessage !== 'notify') {
+        if (message.typeMessage !== 'text' && message.typeMessage !== 'notify' && message.transfer === false) {
             let promises = []
             promises = message.information.map(async (item, index) => {
                 return uploadToS3(`${item.mimetype.split('/')[0] !== 'application' ? item.mimetype.split('/')[0] : item.originalname.split('.')[item.originalname.split('.').length - 1]}___${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype, message.file_title[index + 1], item.size / 1024)

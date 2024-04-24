@@ -5,6 +5,14 @@ const sortByLastMessageTimeDescending = require('../utils/sortRoom')
 const uploadToS3 = require('../AWS/s3')
 
 class RoomService {
+
+    updateImage = async (id, image) => {
+        const url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+        await roomModel.updateOne({ _id: id }, { $set: { image: url.url } });
+        const roomUpdated = await roomModel.findById(id);
+        return roomUpdated;
+    }
+
     createRoom = async (users, name, type, image, creator) => {
         let url = ''
         let created = false

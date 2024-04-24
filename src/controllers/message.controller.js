@@ -16,9 +16,9 @@ class MessageController {
     }
 
     sendMessageWithFiles = async (req, res) => {
-        const { room_id, reply, user_id, file_title } = req.body;
+        const { room_id, reply, user_id, file_title, transfer = false } = req.body;
         const information = req.files
-        messageService.sendMessage({ room_id, reply, information, typeMessage: 'file', user_id, file_title })
+        messageService.sendMessage({ room_id, reply, information, typeMessage: 'file', user_id, file_title, transfer })
             .then(message => {
                 return responseWithTokens(req, res, message, 200)
             })
@@ -51,7 +51,7 @@ class MessageController {
 
     sendMessageWithFilesMobile = async (req, res) => {
         try {
-            const { room_id, reply, information, user_id, users, typeMessage } = req.body
+            const { room_id, reply, information, user_id, users, typeMessage, transfer = false } = req.body
             let file_title = ['']
             let processedInformation = await Promise.all(information.map(async item => {
                 const buffer = await Buffer.from(item.base64, 'base64');
@@ -63,12 +63,11 @@ class MessageController {
                     size: item.size,
                 };
             }));
-            const newMessage = await messageService.sendMessage({ room_id, reply, information: processedInformation, user_id, file_title, typeMessage })
+            const newMessage = await messageService.sendMessage({ room_id, reply, information: processedInformation, user_id, file_title, typeMessage, transfer })
             await roomService.updateLastMessage(room_id, { information: `Sent ${information.length} ${information.length === 1 ? "file" : "files"}`, time: new Date(), user_id, _id: newMessage._id })
             const messages = await messageService.getMessagesByRoom(room_id)
-            return responseWithTokens(req, res, messages, 200)
+            return responseWithTokens(req, res, newMessage, 200)
         } catch (error) {
-            console.log(error)
             return responseWithTokens(req, res, error.message, 500)
         }
     }

@@ -23,7 +23,7 @@ class UserService {
                 user.avatar = url.url
             } else {
                 const fileData = await Buffer.from(image.base64, 'base64');
-                const url = await uploadToS3(`image_${Date.now().toString()}_${image.fileName.split('.')[0]}`, fileData, image.mimeType)
+                const url = await uploadToS3(`image_${Date.now().toString()}_${image.fileName?.split('.')[0]}`, fileData, image.mimeType)
                 user.avatar = url.url
             }
         }

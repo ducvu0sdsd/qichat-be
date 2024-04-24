@@ -53,6 +53,10 @@ var MessageSchema = new mongoose.Schema({
     disabled: {
         type: Boolean,
         default: false
+    },
+    transfer: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

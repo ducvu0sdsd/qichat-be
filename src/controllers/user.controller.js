@@ -20,6 +20,19 @@ class UserController {
             })
     }
 
+    updateInformationMobile = async (req, res) => {
+        const user = req.body
+        if (user.avatar?.base64) {
+            user.avatar.base64 = await Buffer.from(user.avatar?.base64, 'base64');
+        }
+        userService.updateInformation(user, user.avatar)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => {
+                console.log(error)
+                return responseWithTokens(req, res, error.message, 500)
+            })
+    }
+
     updatePassWord = (req, res) => {
         const id = req.params.id;
         const { password, newPassword } = req.body

@@ -64,6 +64,23 @@ class RoomController {
             .catch(error => responseWithTokens(req, res, error, 500))
     }
 
+    updateImage = async (req, res) => {
+        const image = req.file
+        const { id } = req.params
+        roomService.updateImage(id, image)
+            .then(newRoom => responseWithTokens(req, res, newRoom, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    updateImageMobile = async (req, res) => {
+        const { image } = req.body
+        const { id } = req.params
+        image.buffer = await Buffer.from(image.base64, 'base64');
+        roomService.updateImage(id, image)
+            .then(newRoom => responseWithTokens(req, res, newRoom, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
     delete = async (req, res) => {
         const { id } = req.params
         roomService.delete(id)

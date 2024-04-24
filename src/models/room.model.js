@@ -18,6 +18,10 @@ var roomSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Message',
                 default: null
+            },
+            edit: {
+                type: Boolean,
+                default: false
             }
         }
     ],
