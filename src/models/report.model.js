@@ -2,27 +2,42 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo models
 var reportSchema = new mongoose.Schema({
-    name: {
+    title: {
         type: String,
-        required: true,
-        unique: true,
-        index: true,
     },
-    email: {
+    body: {
         type: String,
-        required: true,
-        unique: true,
     },
-    mobile: {
-        type: String,
-        required: true,
-        unique: true,
+    message: {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Message',
+        },
+        information: {
+            type: mongoose.Schema.Types.Mixed
+        }
     },
-    password: {
-        type: String,
-        required: true,
+    fromUser: {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // để chỉ đến mô hình User nếu bạn đang thực hiện quan hệ với chính bản thân mô hình User
+        },
+        fullName: String,
+        avatar: String
     },
+    toUser: {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // để chỉ đến mô hình User nếu bạn đang thực hiện quan hệ với chính bản thân mô hình User
+        },
+        fullName: String,
+        avatar: String
+    },
+    watched: {
+        type: Boolean,
+        default: false
+    }
 });
 
 //Export the model
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Report', reportSchema);

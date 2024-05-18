@@ -8,5 +8,6 @@ router.use('/v1/api', require('./user'))
 router.use('/v1/api', require('./message'))
 router.use('/v1/api', require('./request'))
 router.use('/v1/api', require('./room'))
+router.use('/v1/api', require('./report'))
 
 module.exports = router

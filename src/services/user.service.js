@@ -122,8 +122,9 @@ class UserService {
     }
 
     block = async (user_id_1, user_id_2) => {
-        const user1 = await userModel.findById(user_id_1)
+        const user1 = await userModel.findById(user_id_1).lean()
         user1.friends.filter(item => item._id.toString() === user_id_2.toString())[0].block = true
+        console.log(user1)
         const userUpdated = await userModel.findByIdAndUpdate(user_id_1, user1, { new: true })
         if (userUpdated)
             userUpdated.password = ''
@@ -136,6 +137,59 @@ class UserService {
         const userUpdated = await userModel.findByIdAndUpdate(user_id_1, user1, { new: true })
         if (userUpdated)
             userUpdated.password = ''
+        return userUpdated
+    }
+
+    addNotification = async (notify, id) => {
+        const notification = {
+            ...notify,
+            time: new Date()
+        }
+        const userUpdated = await userModel.updateOne(
+            { _id: id },
+            { $push: { notifications: { $each: [notification], $position: 0 } } }
+        );
+        return userUpdated
+    }
+
+    blockAccount = async (notify, id) => {
+        // console.log(notify, id)
+        let promises = []
+        if (notify.image) {
+            promises = notify.image.map(async (item, index) => {
+                return uploadToS3(`image___${Date.now().toString()}_${item.originalname.split('.')[0]}`, item.buffer, item.mimetype, 'report', item.size / 1024)
+            });
+        }
+        const urls = await Promise.all(promises)
+        notify.image = urls.map(item => item.url)
+        const notification = {
+            ...notify,
+            time: new Date(),
+        }
+        const userUpdated = await userModel.updateOne(
+            { _id: id },
+            {
+                $set: { disable: true },
+                $push: { notifications: { $each: [notification], $position: 0 } }
+            }
+        );
+        return userUpdated
+    }
+
+    unblockAccount = async (id) => {
+        const notification = {
+            title: 'Tài khoản của bạn đã được mở khóa',
+            body: 'Hy vọng bạn sẽ tiếp tục đồng hành cùng Qichat',
+            image: null,
+            time: new Date(),
+        }
+        const userUpdated = await userModel.updateOne(
+            { _id: id },
+            {
+                $set: { disable: false },
+                $push: { notifications: { $each: [notification], $position: 0 } }
+            }
+        )
         return userUpdated
     }
 }

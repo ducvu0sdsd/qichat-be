@@ -70,6 +70,11 @@ const socket = (server, baseURL) => {
             io.emit('update-operation-rooms', body)
             io.emit('update-operation-friends', body)
         })
+
+        socket.on('voice_speak', async ({ voice, ids }) => {
+            console.log(voice, ids)
+            io.emit('voice_listen', { voice, ids })
+        })
     })
 }
 

@@ -6,6 +6,14 @@ const responseWithTokens = require("../utils/response");
 
 class UserController {
 
+    findAll = (req, res) => {
+        userService.findAll()
+            .then(users => responseWithTokens(req, res, users, 200))
+            .catch(error => {
+                return responseWithTokens(req, res, error.message, 500)
+            })
+    }
+
     updateInformation = (req, res) => {
         const user = JSON.parse(req.body.user)
         let image = req.file
@@ -15,7 +23,6 @@ class UserController {
         userService.updateInformation(user, image)
             .then(user => responseWithTokens(req, res, user, 200))
             .catch(error => {
-                console.log(error)
                 return responseWithTokens(req, res, error.message, 500)
             })
     }
@@ -149,6 +156,32 @@ class UserController {
         userService.unblock(user_block, user_id)
             .then(user => responseWithTokens(req, res, user, 200))
             .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    addNotification = async (req, res) => {
+        const { title, body, message, id } = req.body
+        userService.addNotification({ title, body, message }, id)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    blockUser = async (req, res) => {
+        const { title, body, id } = req.body
+        const image = req.files
+        userService.blockAccount({ title, body, image }, id)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => {
+                return responseWithTokens(req, res, error, 500)
+            })
+    }
+
+    unblockUser = async (req, res) => {
+        const { id } = req.params
+        userService.unblockAccount(id)
+            .then(user => responseWithTokens(req, res, user, 200))
+            .catch(error => {
+                return responseWithTokens(req, res, error, 500)
+            })
     }
 }
 

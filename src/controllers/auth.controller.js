@@ -87,7 +87,7 @@ class AccessController {
             user.password = ''
             user.friends = user.friends.map(friend => {
                 const friendFound = users.filter(item => item._id.toString() === friend._id.toString())[0]
-                return friendFound
+                return { ...friendFound, block: friend.block }
             })
         }
         return responseWithTokens(req, res, user, 200)

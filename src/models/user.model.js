@@ -58,15 +58,6 @@ var userSchema = new mongoose.Schema({
         enum: ['Male', 'Female'],
         require: true
     },
-    restrictions: [
-        {
-            _id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Room', // để chỉ đến mô hình User nếu bạn đang thực hiện quan hệ với chính bản thân mô hình User
-            },
-            name: String,
-        }
-    ],
     operating: {
         status: {
             type: Boolean,
@@ -75,6 +66,37 @@ var userSchema = new mongoose.Schema({
         time: {
             type: Date,
         }
+    },
+    notifications: {
+        type: [
+            {
+                title: {
+                    type: String
+                },
+                body: {
+                    type: String
+                },
+                image: {
+                    type: [String],
+                    default: []
+                },
+                message: {
+                    type: mongoose.Schema.Types.Mixed,
+                    default: null
+                },
+                time: {
+                    type: Date
+                },
+                watched: {
+                    type: Boolean,
+                    default: false
+                }
+            }
+        ]
+    },
+    disable: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 
