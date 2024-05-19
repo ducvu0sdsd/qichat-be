@@ -11,14 +11,14 @@ class UserService {
         return await userModel.find().lean()
     }
 
-    updateInformation = async (user, image) => {
+    updateInformation = async (user, image, isWeb) => {
         const userFound = await userModel.findById(user._id)
         if (!userFound) {
             throw new Error("User not found")
         }
         user.password = userFound.password
         if (image) {
-            if (image.originalname) {
+            if (isWeb === true) {
                 const url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
                 user.avatar = url.url
             } else {

@@ -20,7 +20,7 @@ class UserController {
         if (req.body.image) {
             image = JSON.parse(req.body.image)
         }
-        userService.updateInformation(user, image)
+        userService.updateInformation(user, image, true)
             .then(user => responseWithTokens(req, res, user, 200))
             .catch(error => {
                 return responseWithTokens(req, res, error.message, 500)
@@ -32,7 +32,7 @@ class UserController {
         if (user.avatar?.base64) {
             user.avatar.base64 = await Buffer.from(user.avatar?.base64, 'base64');
         }
-        userService.updateInformation(user, user.avatar)
+        userService.updateInformation(user, user.avatar, false)
             .then(user => responseWithTokens(req, res, user, 200))
             .catch(error => {
                 console.log(error)
