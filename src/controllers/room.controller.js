@@ -69,7 +69,9 @@ class RoomController {
         const { id } = req.params
         roomService.updateImage(id, image)
             .then(newRoom => responseWithTokens(req, res, newRoom, 200))
-            .catch(error => responseWithTokens(req, res, error, 500))
+            .catch(error => {
+                return responseWithTokens(req, res, error, 500)
+            })
     }
 
     updateImageMobile = async (req, res) => {
@@ -85,6 +87,20 @@ class RoomController {
         const { id } = req.params
         roomService.delete(id)
             .then(newRooms => responseWithTokens(req, res, newRooms, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    addDeputy = async (req, res) => {
+        const { room_id, user_id } = req.body
+        roomService.addDeputy(room_id, user_id)
+            .then(newRoom => responseWithTokens(req, res, newRoom, 200))
+            .catch(error => responseWithTokens(req, res, error, 500))
+    }
+
+    removeDeputy = async (req, res) => {
+        const { room_id, user_id } = req.body
+        roomService.deleteDeputy(room_id, user_id)
+            .then(newRoom => responseWithTokens(req, res, newRoom, 200))
             .catch(error => responseWithTokens(req, res, error, 500))
     }
 }

@@ -14,4 +14,6 @@ router.put('/rooms/:id', middleware.checkToken, roomController.update)
 router.put('/rooms/update-image/:id', middleware.checkToken, upload.single('image'), roomController.updateImage)
 router.put('/rooms/update-image-mobile/:id', middleware.checkToken, roomController.updateImageMobile)
 router.delete('/rooms/:id', middleware.checkToken, roomController.delete)
+router.post('/rooms/add-deputy', middleware.checkToken, roomController.addDeputy)
+router.post('/rooms/remove-deputy', middleware.checkToken, roomController.removeDeputy)
 module.exports = router

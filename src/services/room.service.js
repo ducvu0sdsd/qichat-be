@@ -7,7 +7,9 @@ const uploadToS3 = require('../AWS/s3')
 class RoomService {
 
     updateImage = async (id, image) => {
+        console.log(1)
         const url = await uploadToS3(`image_${Date.now().toString()}_${image.originalname.split('.')[0]}`, image.buffer, image.mimetype)
+        console.log(url)
         await roomModel.updateOne({ _id: id }, { $set: { image: url.url } });
         const roomUpdated = await roomModel.findById(id);
         return roomUpdated;
@@ -98,6 +100,20 @@ class RoomService {
         const options = { new: true };
         const updatedRoom = await roomModel.findOneAndUpdate(filter, update, options);
 
+        return updatedRoom;
+    }
+
+    addDeputy = async (room_id, user_id) => {
+        const updatedRoom = await roomModel.findOneAndUpdate({ _id: room_id }, { $push: { deputies: user_id } }, { new: true })
+        return updatedRoom;
+    }
+
+    deleteDeputy = async (room_id, user_id) => {
+        const updatedRoom = await roomModel.findOneAndUpdate(
+            { _id: room_id },
+            { $pull: { deputies: user_id } },
+            { new: true }
+        );
         return updatedRoom;
     }
 }

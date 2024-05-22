@@ -17,10 +17,9 @@ const uploadToS3 = (filePath, file, type, name, size) => new Promise((reject, re
             Body: file,
             ContentType: type,
         }
-
         s3.upload(paramsS3, async (err, data) => {
             if (err) {
-
+                console.log(err)
             } else {
                 const imageURL = data.Location
                 reject({ url: imageURL, name, size: Number(size?.toFixed(2)) })

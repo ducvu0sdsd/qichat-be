@@ -61,6 +61,10 @@ var roomSchema = new mongoose.Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    deputies: {
+        type: [String],
+        default: []
     }
 }, { timestamps: true });
 
